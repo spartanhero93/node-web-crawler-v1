@@ -22,5 +22,5 @@ const fetchData = async () => {
   }
 }
 
-fetchData()
-// animeItem()
+//fetchData()
+animeItem()
