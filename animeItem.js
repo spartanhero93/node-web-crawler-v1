@@ -26,6 +26,14 @@ module.exports = async link => {
         /^\s+|\s+$|\s+(?=\s)[\n]/g,
         ''
       ),
+      status: $('.js-scrollfix-bottom > div', html)[10].children[2].data.replace(
+        /^\s+|\s+$|\s+(?=\s)[\n]/g,
+        ''
+      ),
+      aired: $('.js-scrollfix-bottom > div', html)[11].children[2].data.replace(
+        /^\s+|\s+$|\s+(?=\s)[\n]/g,
+        ''
+      ),
       score: $('span[itemprop=ratingValue]', html)[0].children[0].data,
       rankingPopularityMembers: $('.di-ib.ml12.pl20.pt8', html)[0].children.map(item =>
         item.children[1].children.map(item => item.data)
