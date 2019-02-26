@@ -21,12 +21,12 @@ const fetchData = async () => {
   }
 }
 
-app.get('/', async (req, res) => {
-  const data = await animeItem()
-  res.send({ data })
-})
+// app.get('/', async (req, res) => {
+//   const data = await animeItem()
+//   res.send({ data })
+// })
 
-app.listen(3000, () => console.log(`Listening on port 3000`))
+// app.listen(3000, () => console.log(`Listening on port 3000`))
 
 //fetchData()
 const runSingleThread = async () => {

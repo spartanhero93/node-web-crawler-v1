@@ -37,7 +37,12 @@ module.exports = async link => {
           if (item && item.length > 3) return item
         })
         .map(item => item.replace(/[\n"/]/g, '')),
-      openingThemes: $('.di-tc.va-t', html)[2]
+      openingThemes: $('.di-tc.va-t.borderDark.pb4', html)[0]
+        .children[3].children.filter(item => {
+          if (item.name === 'span') return item
+        })
+        .map(item => item.children.map(item => item.data)),
+      endingThemes: $('.di-tc.va-t.borderDark.pb4', html)[1]
         .children[3].children.filter(item => {
           if (item.name === 'span') return item
         })
