@@ -1,11 +1,22 @@
 const rp = require('request-promise')
-const url = 'https://myanimelist.net/anime/32281/Kimi_no_Na_wa'
+const url = 'https://myanimelist.net/anime/918/'
 const $ = require('cheerio')
+
+const checkForAttribs = async video => {
+  if (video) {
+    return {
+      href: video.attribs.href,
+      img: video.attribs.style,
+    }
+  } else {
+    return undefined
+  }
+}
 
 module.exports = async link => {
   try {
     const html = await rp(link || url)
-    console.log({
+    return {
       name: $('.spaceit_pad', html)[0].children[2].data.replace(
         /^\s+|\s+$|\s+(?=\s)[\n]/g,
         ''
@@ -32,7 +43,8 @@ module.exports = async link => {
         })
         .map(item => item.children.map(item => item.data)),
       coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
-    })
+      videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
+    }
   } catch (error) {
     console.log(error)
   }
