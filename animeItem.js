@@ -12,7 +12,6 @@ const checkForAttribs = async video => {
     return undefined
   }
 }
-
 module.exports = async link => {
   try {
     const html = await rp(link || url)
@@ -34,11 +33,26 @@ module.exports = async link => {
         /^\s+|\s+$|\s+(?=\s)[\n]/g,
         ''
       ),
+      premiered: $(),
+      producers: $('.js-scrollfix-bottom > div', html)[14]
+        .children.filter(item => {
+          if (item.name === 'a') {
+            return item
+          }
+        })
+        .map(item => item.children[0]['data']),
+      genres: $('.js-scrollfix-bottom > div', html)[18]
+        .children.filter(item => {
+          if (item.name === 'a') {
+            return item
+          }
+        })
+        .map(item => item.children[0]['data']),
+
       score: $('span[itemprop=ratingValue]', html)[0].children[0].data,
       rankingPopularityMembers: $('.di-ib.ml12.pl20.pt8', html)[0].children.map(item =>
         item.children[1].children.map(item => item.data)
       ),
-      /**  [0].children[1].children[0].data  */
       background: $('span[itemprop=description]', html)[0]
         .children.map(item => item.data)
         .filter(item => {
@@ -57,6 +71,8 @@ module.exports = async link => {
         .map(item => item.children.map(item => item.data)),
       coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
       videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
+
+      user: $('.borderDark > .spaceit > div > table > tbody > tr > td', html),
     }
   } catch (error) {
     console.log(error)
