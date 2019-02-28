@@ -72,7 +72,7 @@ module.exports = async link => {
       coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
       videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
 
-      user: $('.borderDark > .spaceit > div > table > tbody > tr > td', html),
+      // user: $('.borderDark > .spaceit > div > table > tbody > tr > td', html),
     }
   } catch (error) {
     console.log(error)

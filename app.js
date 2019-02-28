@@ -15,11 +15,20 @@ const fetchData = async () => {
       arrOfLinks.push($('.detail > .di-ib > .hoverinfo_trigger', html)[i].attribs.href)
     }
 
-    arrOfLinks.map(link => animeItem(link))
+    const data = await animeItem(arrOfLinks[0])
+    console.log(await data)
+
+    // for (let i = 0; i < arrOfLinks.length; i++) {
+    //   setTimeout(async () => {
+    //     console.log(await animeItem(arrOfLinks[i]))
+    //   }, i * 3000)
+    // }
   } catch (error) {
     console.log(error)
   }
 }
+
+fetchData()
 
 // app.get('/', async (req, res) => {
 //   const data = await animeItem()
@@ -28,10 +37,10 @@ const fetchData = async () => {
 
 // app.listen(3000, () => console.log(`Listening on port 3000`))
 
-//fetchData()
-const runSingleThread = async () => {
-  const data = await animeItem()
+/** Fetch single */
+// const single = async () => {
+//   const data = await animeItem()
+//   console.log(data)
+// }
 
-  console.log(data)
-}
-runSingleThread()
+// single()
