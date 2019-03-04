@@ -1,76 +1,82 @@
 const rp = require('request-promise')
-const url = 'https://myanimelist.net/anime/918/'
+const url = 'https://myanimelist.net/anime/11061'
 const $ = require('cheerio')
 
-const checkForAttribs = async video => {
-  if (video) {
-    return {
-      href: video.attribs.href,
-      img: video.attribs.style,
-    }
-  } else {
-    return undefined
-  }
-}
+const arr = [{ stiensGate: '9253' }, { Gintama: '28977' }, { HxH: '11061' }]
+
+const checkForAttribs = async video =>
+  video
+    ? {
+        href: video.attribs.href,
+        img: video.attribs.style,
+      }
+    : undefined
+
+const cleanRegEx = data => data.replace(/^\s+|\s+$|\s+(?=\s)[\n]/g, '')
+
 module.exports = async link => {
   try {
     const html = await rp(link || url)
+    const sideBarInfoStr = '.js-scrollfix-bottom > div'
+    const checkForTags = amount => {
+      /** Checks for synonyms tag, and manga cart tag */
+      let amountToBeAdded = 0
+      if ($('.di-b.mt4.mb16.ac > a > .fa-shopping-cart', html)[0]) {
+        amountToBeAdded++
+        if ($(sideBarInfoStr, html)[7].children[1].children[0].data === 'Synonyms:') {
+          amountToBeAdded++
+        }
+      } else if (
+        $(sideBarInfoStr, html)[6].children[1].children[0].data === 'Synonyms:'
+      ) {
+        amountToBeAdded++
+      } else {
+        /** default */
+        return amount
+      }
+      return amount + amountToBeAdded
+    }
+
     return {
-      name: $('.spaceit_pad', html)[0].children[2].data.replace(
-        /^\s+|\s+$|\s+(?=\s)[\n]/g,
-        ''
-      ),
-      type: $('.js-scrollfix-bottom > div > a', html)[8].children[0].data,
-      episodes: $('.js-scrollfix-bottom > div', html)[9].children[2].data.replace(
-        /^\s+|\s+$|\s+(?=\s)[\n]/g,
-        ''
-      ),
-      status: $('.js-scrollfix-bottom > div', html)[10].children[2].data.replace(
-        /^\s+|\s+$|\s+(?=\s)[\n]/g,
-        ''
-      ),
-      aired: $('.js-scrollfix-bottom > div', html)[11].children[2].data.replace(
-        /^\s+|\s+$|\s+(?=\s)[\n]/g,
-        ''
-      ),
-      premiered: $(),
-      producers: $('.js-scrollfix-bottom > div', html)[14]
-        .children.filter(item => {
-          if (item.name === 'a') {
-            return item
-          }
-        })
-        .map(item => item.children[0]['data']),
-      genres: $('.js-scrollfix-bottom > div', html)[18]
-        .children.filter(item => {
-          if (item.name === 'a') {
-            return item
-          }
-        })
+      name: cleanRegEx($('.spaceit_pad', html)[0].children[2].data),
+      type: $(sideBarInfoStr, html)[checkForTags(7)].children.filter(
+        item => item.name === 'a'
+      )[0].children[0].data,
+
+      /** OG */
+      // type: $(sideBarInfoStr, html)[checkForTags(7)].children[3].children.data,
+      episodes: cleanRegEx($(sideBarInfoStr, html)[checkForTags(8)].children[2].data),
+      status: cleanRegEx($(sideBarInfoStr, html)[checkForTags(9)].children[2].data),
+      aired: cleanRegEx($(sideBarInfoStr, html)[checkForTags(10)].children[2].data),
+      producers: $(sideBarInfoStr, html)
+        [checkForTags(13)].children.filter(item => item.name === 'a')
+        .map(item => item.children[0].data),
+      genres: $('.js-scrollfix-bottom > div', html)
+        [checkForTags(17)].children.filter(item => item.name === 'a')
         .map(item => item.children[0]['data']),
 
-      score: $('span[itemprop=ratingValue]', html)[0].children[0].data,
-      rankingPopularityMembers: $('.di-ib.ml12.pl20.pt8', html)[0].children.map(item =>
-        item.children[1].children.map(item => item.data)
-      ),
-      background: $('span[itemprop=description]', html)[0]
-        .children.map(item => item.data)
-        .filter(item => {
-          if (item && item.length > 3) return item
-        })
-        .map(item => item.replace(/[\n"/]/g, '')),
-      openingThemes: $('.di-tc.va-t.borderDark.pb4', html)[0]
-        .children[3].children.filter(item => {
-          if (item.name === 'span') return item
-        })
-        .map(item => item.children.map(item => item.data)),
-      endingThemes: $('.di-tc.va-t.borderDark.pb4', html)[1]
-        .children[3].children.filter(item => {
-          if (item.name === 'span') return item
-        })
-        .map(item => item.children.map(item => item.data)),
-      coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
-      videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
+      // score: $('span[itemprop=ratingValue]', html)[0].children[0].data,
+      // rankingPopularityMembers: $('.di-ib.ml12.pl20.pt8', html)[0].children.map(item =>
+      //   item.children[1].children.map(item => item.data)
+      // ),
+      // background: $('span[itemprop=description]', html)[0]
+      //   .children.map(item => item.data)
+      //   .filter(item => {
+      //     if (item && item.length > 3) return item
+      //   })
+      //   .map(item => item.replace(/[\n"/]/g, '')),
+      // openingThemes: $('.di-tc.va-t > .theme-songs', html)[0]
+      //   ? $('.di-tc.va-t > .theme-songs', html)[0]
+      //       .children.filter(item => item.name === 'span')
+      //       .map(item => item.children[0].data)
+      //   : undefined,
+      // endingThemes: $('.di-tc.va-t > .theme-songs', html)[1]
+      //   ? $('.di-tc.va-t > .theme-songs', html)[1]
+      //       .children.filter(item => item.name === 'span')
+      //       .map(item => item.children[0].data)
+      //   : undefined,
+      // coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
+      // videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
 
       // user: $('.borderDark > .spaceit > div > table > tbody > tr > td', html),
     }
