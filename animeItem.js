@@ -18,7 +18,6 @@ module.exports = async link => {
   try {
     const html = await rp(link || url)
     const sideBarInfoStr = '.js-scrollfix-bottom > div'
-
     const checkForTags = amount => {
       /** Checks for synonyms tag, and manga cart tag */
       let amountToBeAdded = 0
@@ -46,6 +45,19 @@ module.exports = async link => {
       ) {
         return amount - 2
       } else return amount
+    }
+
+    const handleReviews = () => {
+      const reviews = $('.borderDark', html)[0]
+        .children.filter(item => item.name === 'div')[0]
+        .children.filter(item => item.name === 'div')[0]
+        .children.filter(item => item.name === 'div')[0].children[0].data
+
+      const User = () => ({
+        date: 
+      })
+
+      return reviews
     }
 
     return {
@@ -87,7 +99,7 @@ module.exports = async link => {
       coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
       videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
 
-      reviews: $('.borderDark', html),
+      reviews: handleReviews(),
     }
   } catch (error) {
     console.log(error)
