@@ -2,6 +2,8 @@ const rp = require('request-promise')
 const url = 'https://myanimelist.net/anime/11061'
 const $ = require('cheerio')
 
+const Review = require('./components/Reviews')
+
 const arr = [{ stiensGate: '9253' }, { Gintama: '28977' }, { HxH: '11061' }]
 
 const checkForAttribs = async video =>
@@ -48,16 +50,33 @@ module.exports = async link => {
     }
 
     const handleReviews = () => {
-      const reviews = $('.borderDark', html)[0]
-        .children.filter(item => item.name === 'div')[0]
-        .children.filter(item => item.name === 'div')[0]
-        .children.filter(item => item.name === 'div')[0].children[0].data
+      const arrOfReviews = []
 
-      const User = () => ({
-        date: 
-      })
+      const reviewsObj = $('.borderDark', html)
+      for (const key in reviewsObj) {
+        if (reviewsObj[key]['name'] === 'div') {
+          arrOfReviews.push(reviewsObj[key])
+        }
+      }
+      arrOfReviews[0].children
+        .filter(item => item.name === 'div')[0]
+        .children.filter(item => item.name === 'div')[1]
+        .children[1].children[1].children[0].children.filter(
+          item => item.name === 'td'
+        )[0].children[1].children[1].children[1].attribs.src
+      /** code for pic 
+        
 
-      return reviews
+      // const reviews = $('.borderDark', html)[0]
+      //   .children.filter(item => item.name === 'div')[0]
+      //   /** This is to find the name */
+      //   .children.filter(item => item.name === 'div')[1]
+      //   .children[1].children[1].children[0].children.filter(
+      //     item => item.name === 'td'
+      //   )[0].children[1].children[1].children[1].attribs.src
+      /** This is for the profile pic */
+
+      return arrOfReviews
     }
 
     return {
@@ -99,7 +118,7 @@ module.exports = async link => {
       coverImage: $('.js-scrollfix-bottom > div > a > img', html)[0].attribs.src,
       videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
 
-      reviews: handleReviews(),
+      reviews: await Review($('.borderDark', html)),
     }
   } catch (error) {
     console.log(error)
