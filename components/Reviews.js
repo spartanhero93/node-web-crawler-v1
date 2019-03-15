@@ -21,35 +21,35 @@ module.exports = async objectOfReviews => {
 
     return arrOfReviews.map(item => {
       const userObj = {
-        userName: item.children
+        userName: item['children']
           .filter(item => item.name === 'div')[0]
-          .children.filter(item => item.name === 'div')[1]
-          .children[1].children[1].children[0].children.filter(
+          ['children'].filter(item => item.name === 'div')[1]
+          ['children'][1]['children'][1]['children'][0]['children'].filter(
             item => item.name === 'td'
           )[1]
-          .children.filter(i => i.name === 'a')[0].children[0].data,
+          ['children'].filter(i => i.name === 'a')[0]['children'][0].data,
 
-        numOfPeopleFoundHelpful: item.children
+        numOfPeopleFoundHelpful: item['children']
           .filter(item => item.name === 'div')[0]
-          .children.filter(item => item.name === 'div')[1]
-          .children[1].children[1].children[0].children.filter(
+          ['children'].filter(item => item.name === 'div')[1]
+          ['children'][1]['children'][1]['children'][0]['children'].filter(
             item => item.name === 'td'
           )[1]
-          .children.filter(i => i.name === 'div')[0]
+          ['children'].filter(i => i.name === 'div')[0]
           ['children'].filter(i => i.name === 'strong')[0]
           ['children'].filter(i => i.name === 'span')[0]['children'][0]['data'],
 
-        profilePic: item.children
+        profilePic: item['children']
           .filter(item => item.name === 'div')[0]
-          .children.filter(item => item.name === 'div')[1]
-          .children[1].children[1].children[0].children.filter(
+          ['children'].filter(item => item.name === 'div')[1]
+          ['children'][1]['children'][1]['children'][0]['children'].filter(
             item => item.name === 'td'
-          )[0].children[1].children[1].children[1].attribs.src,
+          )[0]['children'][1]['children'][1]['children'][1].attribs.src,
       }
       return userObj
     })
 
-    // .children
+    // ['children']
     //   .filter(item => item.name === 'div')[0]
     //   .children.filter(item => item.name === 'div')[1]
     //   .children[1].children[1].children[0].children.filter(item => item.name === 'td')[0]
