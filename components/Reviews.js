@@ -3,13 +3,27 @@ const $ = require('cheerio')
 module.exports = async objectOfReviews => {
   try {
     /** Testing Suit */
-    // return objectOfReviews[0].children
-    //   .filter(item => item.name === 'div')[0]
-    //   .children.filter(item => item.name === 'div')[1]
-    //   .children[1].children[1].children[0].children.filter(item => item.name === 'td')[1]
-    //   .children.filter(i => i.name === 'div')[0]
-    //   ['children'].filter(i => i.name === 'strong')[0]
-    //   ['children'].filter(i => i.name === 'span')[0]['children'][0]['data']
+    const recursivelyMap = item => {
+      let found = false
+
+      obtainElement = i => {
+        i.map(item => {
+          
+        })
+      }
+      while(found) {
+        
+      }
+    }
+
+
+    return objectOfReviews[0].children.filter(item => item.name === 'div')
+    // [0]
+    // .children.filter(item => item.name === 'div')[1]
+    // .children[1].children[1].children[0].children.filter(item => item.name === 'td')[1]
+    // .children.filter(i => i.name === 'div')[0]
+    // ['children'].filter(i => i.name === 'strong')[0]
+    // ['children'].filter(i => i.name === 'span')[0]['children'][0]['data']
 
     const arrOfReviews = []
 

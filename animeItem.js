@@ -49,36 +49,6 @@ module.exports = async link => {
       } else return amount
     }
 
-    const handleReviews = () => {
-      const arrOfReviews = []
-
-      const reviewsObj = $('.borderDark', html)
-      for (const key in reviewsObj) {
-        if (reviewsObj[key]['name'] === 'div') {
-          arrOfReviews.push(reviewsObj[key])
-        }
-      }
-      arrOfReviews[0].children
-        .filter(item => item.name === 'div')[0]
-        .children.filter(item => item.name === 'div')[1]
-        .children[1].children[1].children[0].children.filter(
-          item => item.name === 'td'
-        )[0].children[1].children[1].children[1].attribs.src
-      /** code for pic 
-        
-
-      // const reviews = $('.borderDark', html)[0]
-      //   .children.filter(item => item.name === 'div')[0]
-      //   /** This is to find the name */
-      //   .children.filter(item => item.name === 'div')[1]
-      //   .children[1].children[1].children[0].children.filter(
-      //     item => item.name === 'td'
-      //   )[0].children[1].children[1].children[1].attribs.src
-      /** This is for the profile pic */
-
-      return arrOfReviews
-    }
-
     return {
       name: cleanRegEx($('.spaceit_pad', html)[0].children[2].data),
       type: $(sideBarInfoStr, html)[checkForTags(7)].children.filter(
