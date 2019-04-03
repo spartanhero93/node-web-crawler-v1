@@ -1,23 +1,18 @@
-const $ = require('cheerio')
+const $ = require('cheerio');
 
 module.exports = async objectOfReviews => {
   try {
     /** Testing Suit */
     const recursivelyMap = item => {
-      let found = false
+      let found = false;
 
       obtainElement = i => {
-        i.map(item => {
-          
-        })
-      }
-      while(found) {
-        
-      }
-    }
+        i.map(item => {});
+      };
+      while (found) {}
+    };
 
-
-    return objectOfReviews[0].children.filter(item => item.name === 'div')
+    return objectOfReviews[0].children.filter(item => item.name === 'div');
     // [0]
     // .children.filter(item => item.name === 'div')[1]
     // .children[1].children[1].children[0].children.filter(item => item.name === 'td')[1]
@@ -25,11 +20,11 @@ module.exports = async objectOfReviews => {
     // ['children'].filter(i => i.name === 'strong')[0]
     // ['children'].filter(i => i.name === 'span')[0]['children'][0]['data']
 
-    const arrOfReviews = []
+    const arrOfReviews = [];
 
     for (const key in objectOfReviews) {
       if (objectOfReviews[key]['name'] === 'div') {
-        arrOfReviews.push(objectOfReviews[key])
+        arrOfReviews.push(objectOfReviews[key]);
       }
     }
 
@@ -59,9 +54,10 @@ module.exports = async objectOfReviews => {
           ['children'][1]['children'][1]['children'][0]['children'].filter(
             item => item.name === 'td'
           )[0]['children'][1]['children'][1]['children'][1].attribs.src,
-      }
-      return userObj
-    })
+        dateOfReview: item['children']
+      };
+      return userObj;
+    });
 
     // ['children']
     //   .filter(item => item.name === 'div')[0]
@@ -69,6 +65,6 @@ module.exports = async objectOfReviews => {
     //   .children[1].children[1].children[0].children.filter(item => item.name === 'td')[0]
     //   .children[1].children[1].children[1].attribs.src
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
