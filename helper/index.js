@@ -7,4 +7,4 @@ module.exports = {
         }
       : undefined,
   cleanRegEx: data => data.replace(/^\s+|\s+$|\s+(?=\s)[\n]/g, '')
-};
+}

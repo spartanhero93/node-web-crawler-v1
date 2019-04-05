@@ -1,18 +1,30 @@
-const $ = require('cheerio');
+const $ = require('cheerio')
 
 module.exports = async objectOfReviews => {
   try {
     /** Testing Suit */
-    const recursivelyMap = item => {
-      let found = false;
+    const arrOfReviews = []
 
-      obtainElement = i => {
-        i.map(item => {});
-      };
-      while (found) {}
-    };
+    for (const key in objectOfReviews) {
+      if (objectOfReviews[key]['name'] === 'div') {
+        arrOfReviews.push(objectOfReviews[key])
+      }
+    }
 
-    return objectOfReviews[0].children.filter(item => item.name === 'div');
+    const singleReview = arrOfReviews[0]
+    const filteredReview = singleReview['children'].filter(
+      i => i.name === 'div'
+    )
+
+    const firstSec = filteredReview[0]
+    const secondSec = filteredReview[1]
+    const thirdSec = filteredReview[2]
+
+    const filteredFirstSec = firstSec['children'].filter(i => i.name === 'div')
+    const dateBlock = filteredFirstSec[0]
+    const nameBlock = filteredFirstSec[1]
+
+    return nameBlock['children'].filter(i => i.name === 'table')[0]['children']
     // [0]
     // .children.filter(item => item.name === 'div')[1]
     // .children[1].children[1].children[0].children.filter(item => item.name === 'td')[1]
@@ -20,11 +32,11 @@ module.exports = async objectOfReviews => {
     // ['children'].filter(i => i.name === 'strong')[0]
     // ['children'].filter(i => i.name === 'span')[0]['children'][0]['data']
 
-    const arrOfReviews = [];
-
+    /*** 
+     * const arrOfReviews = []
     for (const key in objectOfReviews) {
       if (objectOfReviews[key]['name'] === 'div') {
-        arrOfReviews.push(objectOfReviews[key]);
+        arrOfReviews.push(objectOfReviews[key])
       }
     }
 
@@ -55,16 +67,17 @@ module.exports = async objectOfReviews => {
             item => item.name === 'td'
           )[0]['children'][1]['children'][1]['children'][1].attribs.src,
         dateOfReview: item['children']
-      };
-      return userObj;
-    });
+      }
+      return userObj
+    })
 
-    // ['children']
-    //   .filter(item => item.name === 'div')[0]
-    //   .children.filter(item => item.name === 'div')[1]
-    //   .children[1].children[1].children[0].children.filter(item => item.name === 'td')[0]
-    //   .children[1].children[1].children[1].attribs.src
+    ['children']
+      .filter(item => item.name === 'div')[0]
+      .children.filter(item => item.name === 'div')[1]
+      .children[1].children[1].children[0].children.filter(item => item.name === 'td')[0]
+      .children[1].children[1].children[1].attribs.src
+      */
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}

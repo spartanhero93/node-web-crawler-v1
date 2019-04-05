@@ -1,37 +1,37 @@
-const rp = require('request-promise');
-const url = 'https://myanimelist.net/anime/11061';
-const $ = require('cheerio');
-const { checkForAttribs, cleanRegEx } = require('./helper');
+const rp = require('request-promise')
+const url = 'https://myanimelist.net/anime/11061'
+const $ = require('cheerio')
+const { checkForAttribs, cleanRegEx } = require('./helper')
 
-const Review = require('./components/Reviews');
+const Review = require('./components/Reviews')
 
-const arr = [{ stiensGate: '9253' }, { Gintama: '28977' }, { HxH: '11061' }];
+const arr = [{ stiensGate: '9253' }, { Gintama: '28977' }, { HxH: '11061' }]
 
 module.exports = async link => {
   try {
-    const html = await rp(link || url);
-    const sideBarInfoStr = '.js-scrollfix-bottom > div';
+    const html = await rp(link || url)
+    const sideBarInfoStr = '.js-scrollfix-bottom > div'
     const checkForTags = amount => {
       /** Checks for synonyms tag, and manga cart tag */
-      let amountToBeAdded = 0;
+      let amountToBeAdded = 0
       if ($('.di-b.mt4.mb16.ac > a > .fa-shopping-cart', html)[0]) {
-        amountToBeAdded++;
+        amountToBeAdded++
         if (
           $(sideBarInfoStr, html)[7].children[1].children[0].data ===
           'Synonyms:'
         ) {
-          amountToBeAdded++;
+          amountToBeAdded++
         }
       } else if (
         $(sideBarInfoStr, html)[6].children[1].children[0].data === 'Synonyms:'
       ) {
-        amountToBeAdded++;
+        amountToBeAdded++
       } else {
         /** default */
-        return amount;
+        return amount
       }
-      return amount + amountToBeAdded;
-    };
+      return amount + amountToBeAdded
+    }
 
     const checkType = amount => {
       if (
@@ -39,11 +39,10 @@ module.exports = async link => {
           item => item.name === 'a'
         )[0].children[0].data === 'Movie'
       ) {
-        return amount - 2;
-      } else return amount;
-    };
-
-    return {
+        return amount - 2
+      } else return amount
+    }
+    return await {
       name: cleanRegEx($('.spaceit_pad', html)[0].children[2].data),
       type: $(sideBarInfoStr, html)[checkForTags(7)].children.filter(
         item => item.name === 'a'
@@ -72,7 +71,7 @@ module.exports = async link => {
       background: $('span[itemprop=description]', html)[0]
         .children.map(item => item.data)
         .filter(item => {
-          if (item && item.length > 3) return item;
+          if (item && item.length > 3) return item
         })
         .map(item => item.replace(/[\n"/]/g, '')),
       openingThemes: $('.di-tc.va-t > .theme-songs', html)[0]
@@ -90,8 +89,8 @@ module.exports = async link => {
       videoPromotion: await checkForAttribs($('.video-promotion > a', html)[0]),
 
       reviews: await Review($('.borderDark', html))
-    };
+    }
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
