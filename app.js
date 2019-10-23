@@ -6,15 +6,18 @@ const cors = require('cors')
 const url = 'https://myanimelist.net/topanime.php'
 const animeItem = require('./animeItem')
 
+const test = {}
+
 /** Fetch single */
 const fetchData = async () => {
   try {
     const data = await animeItem()
-    console.log(data)
+    Object.assign(test, data)
   } catch (error) {
     console.log(error)
   }
 }
+
 fetchData()
 
 // const fetchData = async () => {
@@ -38,13 +41,18 @@ fetchData()
 //   }
 // }
 
-// app.use(cors())
-// app.get('/', async (req, res) => {
-//   try {
-//     const data = await animeItem()
-//     console.log(data)
-//   } catch (error) {
-//     res.send(error)
-//   }
-// })
-// app.listen(3001, () => console.log('running server'))
+/** Fetch single */
+app.use(cors())
+app.get('/', async (req, res) => {
+  try {
+    // console.log('User hit endpoint')
+    // const data = await fetchData()
+    // console.log(data)
+    // res.send(await data)
+    console.log(test)
+    res.send(test)
+  } catch (error) {
+    res.send(error)
+  }
+})
+app.listen(3001, () => console.log('running server'))
