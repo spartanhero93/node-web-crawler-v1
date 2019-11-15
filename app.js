@@ -9,7 +9,7 @@ const animeItem = require('./animeItem')
 const test = {}
 
 /** Fetch single */
-const fetchData = async () => {
+const fetchData = async text => {
   try {
     const data = await animeItem()
     Object.assign(test, data)
@@ -17,8 +17,6 @@ const fetchData = async () => {
     console.log(error)
   }
 }
-
-fetchData()
 
 // const fetchData = async () => {
 //   try {
