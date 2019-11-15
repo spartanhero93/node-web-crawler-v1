@@ -1,22 +1,16 @@
 const app = require('express')()
-const rp = require('request-promise')
-const $ = require('cheerio')
 const cors = require('cors')
-
-const url = 'https://myanimelist.net/topanime.php'
 const animeItem = require('./animeItem')
+const mongoose = require('mongoose')
+require('dotenv').config()
 
-const test = {}
+const APIModel = require('./models/api')
 
-/** Fetch single */
-const fetchData = async text => {
-  try {
-    const data = await animeItem()
-    Object.assign(test, data)
-  } catch (error) {
-    console.log(error)
-  }
-}
+mongoose.connect(
+  process.env.MONGO_URI,
+  { useNewUrlParser: true },
+  () => console.log('Mongoose connected')
+)
 
 // const fetchData = async () => {
 //   try {
@@ -38,17 +32,38 @@ const fetchData = async text => {
 //     console.log(error)
 //   }
 // }
-
+const arr = [{ name: 'Plastic Memories', id: 27775 }, { name: 'Sakura-sou no Pet na Kanojo', id: 13759 }, { name: 'ef: A Tale of Memories.', id: 2924 }]
 /** Fetch single */
 app.use(cors())
-app.get('/', async (req, res) => {
+app.get('/:id', async (req, res) => {
   try {
     // console.log('User hit endpoint')
     // const data = await fetchData()
     // console.log(data)
     // res.send(await data)
-    console.log(test)
-    res.send(test)
+    const { name, episodes, status, aired, coverImage, score, videoPromotion, producers, genres } = await animeItem(req.params.id)
+    APIModel.findOne({ name }, (err, animeExists) => {
+      if (err) return console.log(err)
+      if (animeExists) return console.log('Anime already exists!')
+
+      const newAnimeModel = new APIModel({
+        name,
+        id: req.params.id,
+        episodes,
+        status,
+        aired,
+        coverImage,
+        score,
+        videoPromotion: {
+          href: videoPromotion.href || 'none',
+          img: videoPromotion.img || 'none'
+        },
+        producers,
+        genres
+      })
+      console.log(newAnimeModel)
+      return newAnimeModel.save(saveError => (saveError ? console.log('Error', error) : res.send(newAnimeModel)))
+    })
   } catch (error) {
     res.send(error)
   }

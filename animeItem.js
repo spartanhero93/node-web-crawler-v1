@@ -7,9 +7,9 @@ const Review = require('./components/Reviews')
 
 const arr = [{ stiensGate: '9253' }, { Gintama: '28977' }, { HxH: '11061' }]
 
-module.exports = async link => {
+module.exports = async id => {
   try {
-    const html = await rp(link || url)
+    const html = await rp(`https://myanimelist.net/anime/${id}`)
     const sideBarInfoStr = '.js-scrollfix-bottom > div'
     const checkForTags = amount => {
       /** Checks for synonyms tag, and manga cart tag */
