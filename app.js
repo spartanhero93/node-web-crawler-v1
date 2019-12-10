@@ -33,19 +33,36 @@ mongoose.connect(
 //   }
 // }
 const arr = [{ name: 'Plastic Memories', id: 27775 }, { name: 'Sakura-sou no Pet na Kanojo', id: 13759 }, { name: 'ef: A Tale of Memories.', id: 2924 }]
+const getCircularReplacer = () => {
+  const seen = new WeakSet()
+  return (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return
+      }
+      seen.add(value)
+    }
+    return value
+  }
+}
+
 /** Fetch single */
 app.use(cors())
-app.get('/:id', async (req, res) => {
+app.get('/getAnime/:id', async (req, res) => {
+  const data = await animeItem(req.params.id)
+  res.send(JSON.stringify(data, getCircularReplacer()))
+})
+app.get('/testing/:id', async (req, res) => {
   try {
     // console.log('User hit endpoint')
     // const data = await fetchData()
     // console.log(data)
     // res.send(await data)
-    const { name, episodes, status, aired, coverImage, score, videoPromotion, producers, genres } = await animeItem(req.params.id)
+    const { name, episodes, status, aired, coverImage, score, videoPromotion, producers, genres, background, openingThemes, endingThemes } = await animeItem(req.params.id)
     APIModel.findOne({ name }, (err, animeExists) => {
       if (err) return console.log(err)
       if (animeExists) return console.log('Anime already exists!')
-
+      console.log(videoPromotion)
       const newAnimeModel = new APIModel({
         name,
         id: req.params.id,
@@ -54,12 +71,17 @@ app.get('/:id', async (req, res) => {
         aired,
         coverImage,
         score,
-        videoPromotion: {
-          href: videoPromotion.href || 'none',
-          img: videoPromotion.img || 'none'
-        },
+        videoPromotion: videoPromotion
+          ? {
+            href: videoPromotion.href ? videoPromotion.href : 'none',
+            img: videoPromotion.img || 'none'
+          }
+          : 'no videoPromo',
         producers,
-        genres
+        genres,
+        background: background.join(),
+        openingThemes,
+        endingThemes
       })
       console.log(newAnimeModel)
       return newAnimeModel.save(saveError => (saveError ? console.log('Error', error) : res.send(newAnimeModel)))
