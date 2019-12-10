@@ -52,13 +52,28 @@ app.get('/getAnime/:id', async (req, res) => {
   const data = await animeItem(req.params.id)
   res.send(JSON.stringify(data, getCircularReplacer()))
 })
-app.get('/testing/:id', async (req, res) => {
+app.get('/getAllAnime', async (req, res) => {
+  console.log('user hit allAnime')
+  APIModel.find({}, (err, anime) => (err ? console.log(err) : anime ? res.send(anime) : ''))
+})
+app.post('/postAnime', async (req, res) => {
   try {
-    // console.log('User hit endpoint')
-    // const data = await fetchData()
-    // console.log(data)
-    // res.send(await data)
-    const { name, episodes, status, aired, coverImage, score, videoPromotion, producers, genres, background, openingThemes, endingThemes } = await animeItem(req.params.id)
+    const {
+      name,
+      type,
+      episodes,
+      status,
+      aired,
+      coverImage,
+      score,
+      videoPromotion,
+      producers,
+      genres,
+      background,
+      openingThemes,
+      endingThemes,
+      rankingPopularityMembers
+    } = await animeItem(req.params.id)
     APIModel.findOne({ name }, (err, animeExists) => {
       if (err) return console.log(err)
       if (animeExists) return console.log('Anime already exists!')
@@ -66,10 +81,12 @@ app.get('/testing/:id', async (req, res) => {
       const newAnimeModel = new APIModel({
         name,
         id: req.params.id,
+        type,
         episodes,
         status,
         aired,
         coverImage,
+        rankingPopularityMembers,
         score,
         videoPromotion: videoPromotion
           ? {
